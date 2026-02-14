@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="EatHaven - Smart kochen mit jedem Budget. Nie wieder Lebensmittel verschwenden.">
+    <meta name="description" content="EatHaven - Dein persönlicher Flow-Coach fürs Kochen">
     <title>EatHaven - Your Safe Place to Eat</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
     <style>
@@ -61,9 +61,96 @@
             margin-bottom: 8px;
         }
 
+        .greeting {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
         .tagline {
             color: #64748b;
             font-weight: 600;
+            font-size: 14px;
+        }
+
+        .flow-dashboard {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 2px solid #10b981;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .flow-status {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .flow-emoji {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+
+        .flow-title {
+            font-size: 24px;
+            font-weight: 900;
+            color: #047857;
+            margin-bottom: 4px;
+        }
+
+        .flow-subtitle {
+            font-size: 14px;
+            color: #065f46;
+            font-weight: 600;
+        }
+
+        .flow-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .flow-stat {
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 900;
+            color: #10b981;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .flow-tip {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid #10b981;
+        }
+
+        .flow-tip-title {
+            font-weight: 800;
+            color: #047857;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .flow-tip-text {
+            color: #1f2937;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
         .profile-badge {
@@ -97,6 +184,9 @@
             cursor: pointer;
             transition: all 0.3s;
             margin: 12px 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            min-height: 60px;
         }
 
         .btn:active {
@@ -185,13 +275,13 @@
         }
 
         .recipe-budget {
-            border-color: #f59e0b;
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
         }
 
         .recipe-premium {
-            border-color: #a855f7;
-            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
         }
 
         .recipe-header {
@@ -229,11 +319,11 @@
         }
 
         .price-budget {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         }
 
         .price-premium {
-            background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
 
         .recipe-badge {
@@ -251,11 +341,11 @@
         }
 
         .badge-budget {
-            background: #f59e0b;
+            background: #3b82f6;
         }
 
         .badge-premium {
-            background: #a855f7;
+            background: #f59e0b;
         }
 
         .recipe-description {
@@ -320,13 +410,16 @@
 
         .action-btn {
             flex: 1;
-            padding: 14px;
+            padding: 16px;
             border: none;
             border-radius: 12px;
             font-size: 16px;
             font-weight: 800;
             cursor: pointer;
             transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            min-height: 50px;
         }
 
         .action-btn:active {
@@ -347,6 +440,9 @@
         .btn-shop {
             background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
             color: white;
+            padding: 16px 24px;
+            margin-bottom: 12px;
+            min-height: 54px;
         }
 
         .modal {
@@ -404,6 +500,7 @@
         }
 
         input[type="number"],
+        input[type="text"],
         select {
             width: 100%;
             padding: 12px;
@@ -489,6 +586,10 @@
                 flex-direction: column;
                 gap: 12px;
             }
+
+            .flow-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -499,7 +600,39 @@
             <div class="header">
                 <div class="logo">🏠</div>
                 <h1>EatHaven</h1>
-                <p class="tagline">Your Safe Place to Eat</p>
+                <p class="greeting" id="greetingText">Willkommen!</p>
+                <p class="tagline" id="greetingCta">Your Safe Place to Eat</p>
+            </div>
+
+            <!-- Flow Dashboard -->
+            <div class="flow-dashboard">
+                <div class="flow-status">
+                    <div class="flow-emoji" id="flowEmoji">🌊</div>
+                    <div class="flow-title" id="flowTitle">Voller Flow!</div>
+                    <div class="flow-subtitle" id="flowSubtitle">Du bist bestens aufgestellt</div>
+                </div>
+
+                <div class="flow-stats">
+                    <div class="flow-stat">
+                        <div class="stat-value" id="ingredientCount">12</div>
+                        <div class="stat-label">Zutaten</div>
+                    </div>
+                    <div class="flow-stat">
+                        <div class="stat-value" id="daysLeft">3</div>
+                        <div class="stat-label">Tage Vorrat</div>
+                    </div>
+                    <div class="flow-stat">
+                        <div class="stat-value" id="budgetLeft">45€</div>
+                        <div class="stat-label">Restbudget</div>
+                    </div>
+                </div>
+
+                <div class="flow-tip">
+                    <div class="flow-tip-title">💡 Dein Flow-Tipp:</div>
+                    <div class="flow-tip-text" id="flowTipText">
+                        Koch heute das Linsencurry. Du hast alles da und sparst dir den Einkauf für morgen!
+                    </div>
+                </div>
             </div>
 
             <div class="profile-badge">
@@ -517,17 +650,18 @@
 
         <!-- Demo Notice -->
         <div class="demo-notice">
-            <strong>ℹ️ DEMO-VERSION:</strong> Klicke "JETZT KOCHEN!" für Beispiel-Rezepte. In der finalen Version analysiert die KI deine Fotos!
+            <strong>ℹ️ DEMO-VERSION:</strong> Flow-Werte sind Beispieldaten. In der finalen Version analysiert die KI deine Fotos!
         </div>
 
-        <!-- Budget -->
+        <!-- Pocket Flow (Budget) -->
         <div class="card">
             <div class="slider-container">
                 <div class="slider-label">
-                    <span style="font-weight: 700;">💰 Monats-Budget</span>
+                    <span style="font-weight: 700;">💰 Pocket Flow</span>
                     <span class="slider-value"><span id="budgetValue">50</span>€</span>
                 </div>
                 <input type="range" min="20" max="400" value="50" id="budgetSlider" oninput="updateBudget(this.value)">
+                <p style="font-size: 12px; color: #64748b; margin-top: 8px;">Dein monatliches Budget für Lebensmittel</p>
             </div>
         </div>
 
@@ -559,6 +693,11 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
+                    <label class="form-label">👋 Dein Name</label>
+                    <input type="text" id="userName" placeholder="z.B. Alex" value="">
+                </div>
+
+                <div class="form-group">
                     <label class="form-label">👥 Haushaltsgröße</label>
                     <label style="display: block; font-size: 14px; margin-bottom: 8px;">Erwachsene</label>
                     <input type="number" id="adults" value="2" min="1" max="10">
@@ -581,6 +720,7 @@
                     <label class="form-label">⚠️ Allergien</label>
                     <select id="allergySelect" style="margin-bottom: 12px;">
                         <option value="">Allergie auswählen...</option>
+                        <option value="Keine bekannt">Keine bekannt</option>
                         <option value="Nüsse">Nüsse</option>
                         <option value="Erdnüsse">Erdnüsse</option>
                         <option value="Milch/Laktose">Milch/Laktose</option>
@@ -616,6 +756,12 @@
                         <button class="diet-btn supermarket-btn" onclick="selectSupermarket('aldi')">
                             <div style="font-size: 12px; font-weight: 900;">ALDI</div>
                         </button>
+                        <button class="diet-btn supermarket-btn" onclick="selectSupermarket('netto')">
+                            <div style="font-size: 12px; font-weight: 900;">Netto</div>
+                        </button>
+                        <button class="diet-btn supermarket-btn" onclick="selectSupermarket('penny')">
+                            <div style="font-size: 12px; font-weight: 900;">Penny</div>
+                        </button>
                         <button class="diet-btn supermarket-btn" onclick="selectSupermarket('kaufland')">
                             <div style="font-size: 12px; font-weight: 900;">Kaufland</div>
                         </button>
@@ -638,23 +784,55 @@
     <script>
         // User Profile
         var userProfile = {
+            name: '',
             adults: 2,
             children: 0,
             diet: 'flexitarian',
             allergies: [],
-            supermarket: 'rewe'
+            supermarket: 'rewe',
+            monthlyBudget: 50,
+            spent: 5,
+            ingredientCount: 12,
+            daysLeft: 3
         };
 
-        // Recipe Data Sets
+        // Recipe Data Sets with Flow names
         var recipeSets = [
             {
                 free: {
-                    title: 'Nudeln mit Tomatensoße',
+                    title: 'Linsencurry Flow Match',
+                    desc: 'Zero Waste - nutzt alle deine Vorräte optimal',
+                    ingredients: ['Linsen', 'Tomaten', 'Zwiebeln', 'Curry', 'Kokosmilch', 'Reis']
+                },
+                budget: {
+                    title: 'Budget Cook Gemüse-Pfanne',
+                    desc: 'Schont dein Budget - frisch und lecker',
+                    price: 6.50,
+                    missing: [
+                        {item: 'Paprika 2 Stück', price: 2.99},
+                        {item: 'Brokkoli', price: 1.99},
+                        {item: 'Sojasauce', price: 1.49}
+                    ]
+                },
+                premium: {
+                    title: 'Craving Time: Lachs Deluxe 🐟',
+                    desc: 'Gönne dir was - Restaurant-Qualität',
+                    price: 16.50,
+                    missing: [
+                        {item: 'Lachsfilet 300g', price: 9.99},
+                        {item: 'Spargel grün', price: 3.99},
+                        {item: 'Hollandaise', price: 2.49}
+                    ]
+                }
+            },
+            {
+                free: {
+                    title: 'Pasta Flow Match',
                     desc: 'Klassisch italienisch mit deinen Vorräten',
                     ingredients: ['Nudeln', 'Tomatenmark', 'Zwiebeln', 'Knoblauch', 'Olivenöl', 'Basilikum']
                 },
                 budget: {
-                    title: 'Spaghetti Bolognese',
+                    title: 'Budget Cook Bolognese',
                     desc: 'Mit frischem Hackfleisch - ein Familien-Klassiker',
                     price: 8.50,
                     missing: [
@@ -663,24 +841,24 @@
                     ]
                 },
                 premium: {
-                    title: 'Premium Pasta Carbonara ✨',
-                    desc: 'Mit Guanciale und Pecorino - Restaurant-Qualität',
-                    price: 15.00,
+                    title: 'Craving Time: Trüffel Pasta 🍄',
+                    desc: 'Mit echtem Trüffel - ein Gaumenschmaus',
+                    price: 22.00,
                     missing: [
-                        {item: 'Guanciale 200g', price: 7.99},
-                        {item: 'Pecorino Romano 100g', price: 5.49},
-                        {item: 'Bio-Eier (6 Stück)', price: 2.99}
+                        {item: 'Trüffelöl 100ml', price: 12.99},
+                        {item: 'Parmigiano 200g', price: 6.99},
+                        {item: 'Frische Pasta', price: 2.99}
                     ]
                 }
             },
             {
                 free: {
-                    title: 'Reis mit Gemüse',
+                    title: 'Reis-Bowl Flow Match',
                     desc: 'Bunt und gesund - aus deinem Vorrat',
                     ingredients: ['Reis', 'Paprika', 'Karotten', 'Zwiebeln', 'Sojasauce', 'Ingwer']
                 },
                 budget: {
-                    title: 'Chicken Curry',
+                    title: 'Budget Cook Curry',
                     desc: 'Aromatisch und würzig mit zartem Hühnchen',
                     price: 9.99,
                     missing: [
@@ -690,41 +868,14 @@
                     ]
                 },
                 premium: {
-                    title: 'Thai Red Curry Deluxe 🌶️',
+                    title: 'Craving Time: Thai Garnelen 🦐',
                     desc: 'Mit Garnelen und frischem Basilikum',
                     price: 18.50,
                     missing: [
                         {item: 'Garnelen 300g', price: 9.99},
-                        {item: 'Thai-Basilikum Bund', price: 2.99},
+                        {item: 'Thai-Basilikum', price: 2.99},
                         {item: 'Zitronengras', price: 1.99},
                         {item: 'Fischsauce', price: 3.49}
-                    ]
-                }
-            },
-            {
-                free: {
-                    title: 'Kartoffelsuppe',
-                    desc: 'Cremig und sättigend - perfekt für kalte Tage',
-                    ingredients: ['Kartoffeln', 'Zwiebeln', 'Gemüsebrühe', 'Sahne', 'Petersilie', 'Muskatnuss']
-                },
-                budget: {
-                    title: 'Kartoffel-Hack-Pfanne',
-                    desc: 'Deftig und lecker - die ganze Familie liebt es',
-                    price: 7.50,
-                    missing: [
-                        {item: 'Hackfleisch 400g', price: 3.99},
-                        {item: 'Schmand 200g', price: 1.49},
-                        {item: 'Speck 100g', price: 2.49}
-                    ]
-                },
-                premium: {
-                    title: 'Kartoffel-Trüffel-Gratin 🍄',
-                    desc: 'Mit echtem Trüffel - ein Gaumenschmaus',
-                    price: 22.00,
-                    missing: [
-                        {item: 'Trüffelöl 100ml', price: 12.99},
-                        {item: 'Gruyère Käse 200g', price: 5.99},
-                        {item: 'Crème fraîche 200g', price: 2.49}
                     ]
                 }
             }
@@ -732,13 +883,120 @@
 
         var currentRecipeSet = 0;
 
-        // Functions
+        // Flow status calculator
+        function calculateFlowStatus() {
+            var budget = userProfile.monthlyBudget;
+            var spent = userProfile.spent;
+            var remaining = budget - spent;
+            var ingredients = userProfile.ingredientCount;
+            var days = userProfile.daysLeft;
+
+            document.getElementById('budgetLeft').textContent = remaining.toFixed(0) + '€';
+            document.getElementById('ingredientCount').textContent = ingredients;
+            document.getElementById('daysLeft').textContent = days;
+
+            var flowEmoji = document.getElementById('flowEmoji');
+            var flowTitle = document.getElementById('flowTitle');
+            var flowSubtitle = document.getElementById('flowSubtitle');
+
+            if (days >= 3 && remaining > budget * 0.5) {
+                flowEmoji.textContent = '🌊';
+                flowTitle.textContent = 'Voller Flow!';
+                flowSubtitle.textContent = 'Du bist bestens aufgestellt';
+            } else if (days >= 2 && remaining > budget * 0.3) {
+                flowEmoji.textContent = '✨';
+                flowTitle.textContent = 'Im Flow';
+                flowSubtitle.textContent = 'Alles läuft gut';
+            } else if (days >= 1 || remaining > budget * 0.2) {
+                flowEmoji.textContent = '⚡';
+                flowTitle.textContent = 'Flow läuft aus';
+                flowSubtitle.textContent = 'Bald einkaufen gehen';
+            } else {
+                flowEmoji.textContent = '🚨';
+                flowTitle.textContent = 'Flow-Stop!';
+                flowSubtitle.textContent = 'Zeit für Einkauf!';
+            }
+
+            generateFlowTip();
+        }
+
+        function generateFlowTip() {
+            var tips = [
+                'Koch heute das Linsencurry. Du hast alles da und sparst dir den Einkauf für morgen!',
+                'Mit deinen Vorräten kannst du ' + userProfile.daysLeft + ' Tage überbrücken. Nutze Flow Match Rezepte!',
+                'Dein Budget-Flow ist optimal. Du hast noch ' + (userProfile.monthlyBudget - userProfile.spent).toFixed(0) + '€ übrig.',
+                'Zero Waste Flow: Brauch erst alle Vorräte auf, bevor du neu einkaufst!',
+                'Tipp: Flow Match Rezepte kosten dich 0€ extra und schonen dein Budget.'
+            ];
+
+            var randomTip = tips[Math.floor(Math.random() * tips.length)];
+            document.getElementById('flowTipText').textContent = randomTip;
+        }
+
+        function loadProfile() {
+            var saved = localStorage.getItem('eathaven_profile');
+            if (saved) {
+                try {
+                    var loaded = JSON.parse(saved);
+                    userProfile = Object.assign(userProfile, loaded);
+                } catch (e) {
+                    console.error('Failed to load profile');
+                }
+            }
+        }
+
+        function saveProfileToStorage() {
+            localStorage.setItem('eathaven_profile', JSON.stringify(userProfile));
+        }
+
+        function getTimeBasedGreeting() {
+            var hour = new Date().getHours();
+            var name = userProfile.name || 'du';
+            
+            if (hour >= 5 && hour < 11) {
+                return {
+                    greeting: 'Guten Morgen' + (userProfile.name ? ', ' + userProfile.name : '') + '! ☀️',
+                    cta: 'Lust auf Frühstück?'
+                };
+            } else if (hour >= 11 && hour < 14) {
+                return {
+                    greeting: 'Hey' + (userProfile.name ? ' ' + userProfile.name : '') + '! 🌤️',
+                    cta: 'Zeit für Lunch! Zeig mir deinen Kühlschrank!'
+                };
+            } else if (hour >= 14 && hour < 18) {
+                return {
+                    greeting: 'Hi' + (userProfile.name ? ' ' + userProfile.name : '') + '! 👋',
+                    cta: 'Was kochst du heute Abend?'
+                };
+            } else if (hour >= 18 && hour < 23) {
+                return {
+                    greeting: 'Guten Abend' + (userProfile.name ? ', ' + userProfile.name : '') + '! 🌙',
+                    cta: 'Zeit fürs Abendessen!'
+                };
+            } else {
+                return {
+                    greeting: 'Hey' + (userProfile.name ? ' ' + userProfile.name : '') + '! 🌃',
+                    cta: 'Mitternachtssnack?'
+                };
+            }
+        }
+
+        function updateGreeting() {
+            var greeting = getTimeBasedGreeting();
+            document.getElementById('greetingText').textContent = greeting.greeting;
+            document.getElementById('greetingCta').textContent = greeting.cta;
+        }
+
         function updateBudget(value) {
             document.getElementById('budgetValue').textContent = value;
+            userProfile.monthlyBudget = parseInt(value);
+            calculateFlowStatus();
+            saveProfileToStorage();
         }
 
         function openProfileModal() {
             document.getElementById('profileModal').classList.add('active');
+            document.getElementById('userName').value = userProfile.name || '';
             document.getElementById('adults').value = userProfile.adults;
             document.getElementById('children').value = userProfile.children;
         }
@@ -764,8 +1022,12 @@
         function addAllergy() {
             var select = document.getElementById('allergySelect');
             var allergy = select.value;
-            if (allergy && userProfile.allergies.indexOf(allergy) === -1) {
+            if (allergy && allergy !== 'Keine bekannt' && userProfile.allergies.indexOf(allergy) === -1) {
                 userProfile.allergies.push(allergy);
+                renderAllergies();
+                select.value = '';
+            } else if (allergy === 'Keine bekannt') {
+                userProfile.allergies = [];
                 renderAllergies();
                 select.value = '';
             }
@@ -778,6 +1040,10 @@
 
         function renderAllergies() {
             var container = document.getElementById('allergyTags');
+            if (userProfile.allergies.length === 0) {
+                container.innerHTML = '<div style="color: #10b981; font-weight: 600;">✓ Keine Allergien</div>';
+                return;
+            }
             var html = '';
             for (var i = 0; i < userProfile.allergies.length; i++) {
                 html += '<div class="tag">' + userProfile.allergies[i] + 
@@ -787,6 +1053,7 @@
         }
 
         function saveProfile() {
+            userProfile.name = document.getElementById('userName').value.trim();
             userProfile.adults = parseInt(document.getElementById('adults').value) || 2;
             userProfile.children = parseInt(document.getElementById('children').value) || 0;
             
@@ -806,18 +1073,26 @@
                 edeka: 'EDEKA',
                 lidl: 'Lidl',
                 aldi: 'ALDI',
+                netto: 'Netto',
+                penny: 'Penny',
                 kaufland: 'Kaufland',
                 picnic: 'Picnic',
                 amazon: 'Amazon Fresh'
             };
             document.getElementById('supermarketBadge').textContent = '📍 ' + supermarketLabels[userProfile.supermarket];
             
+            updateGreeting();
+            calculateFlowStatus();
+            saveProfileToStorage();
+            
             if (!document.getElementById('recipesSection').classList.contains('hidden')) {
                 renderRecipes();
             }
             
             document.getElementById('profileModal').classList.remove('active');
-            alert('✅ Profil gespeichert!\n\n👥 ' + totalPeople + ' Personen\n🍽️ ' + dietLabels[userProfile.diet] + '\n📍 ' + supermarketLabels[userProfile.supermarket]);
+            
+            var nameText = userProfile.name ? '\n👋 ' + userProfile.name : '';
+            alert('✅ Profil gespeichert!' + nameText + '\n\n👥 ' + totalPeople + ' Personen\n🍽️ ' + dietLabels[userProfile.diet] + '\n📍 ' + supermarketLabels[userProfile.supermarket]);
         }
 
         function renderRecipes() {
@@ -830,6 +1105,8 @@
                 edeka: 'EDEKA',
                 lidl: 'Lidl',
                 aldi: 'ALDI',
+                netto: 'Netto',
+                penny: 'Penny',
                 kaufland: 'Kaufland',
                 picnic: 'Picnic',
                 amazon: 'Amazon Fresh'
@@ -838,11 +1115,11 @@
             
             var html = '';
             
-            // FREE Recipe
-            html += '<div class="recipe-card recipe-free" onclick="selectRecipe(\'free\')">';
+            // Flow Match (FREE)
+            html += '<div class="recipe-card recipe-free">';
             html += '<div class="recipe-header">';
             html += '<div>';
-            html += '<div class="recipe-badge badge-free">🟢 GRATIS</div>';
+            html += '<div class="recipe-badge badge-free">🌊 FLOW MATCH</div>';
             html += '<h3 class="recipe-title">' + recipes.free.title + '</h3>';
             html += '<p class="recipe-servings">👥 Für ' + totalPeople + ' Personen</p>';
             html += '</div>';
@@ -855,16 +1132,16 @@
             }
             html += '</div>';
             html += '<div class="action-buttons">';
-            html += '<button class="action-btn btn-no" onclick="event.stopPropagation(); swipeNo()">✕ Nein</button>';
-            html += '<button class="action-btn btn-yes" onclick="event.stopPropagation(); swipeYes(\'' + recipes.free.title + '\')">✓ Ja!</button>';
+            html += '<button class="action-btn btn-no" data-action="no">✕ Nein</button>';
+            html += '<button class="action-btn btn-yes" data-action="yes" data-recipe="' + recipes.free.title + '">✓ Ja!</button>';
             html += '</div>';
             html += '</div>';
             
-            // BUDGET Recipe
-            html += '<div class="recipe-card recipe-budget" onclick="selectRecipe(\'budget\')">';
+            // Budget Cook (BUDGET)
+            html += '<div class="recipe-card recipe-budget">';
             html += '<div class="recipe-header">';
             html += '<div>';
-            html += '<div class="recipe-badge badge-budget">🟡 UPGRADE</div>';
+            html += '<div class="recipe-badge badge-budget">💙 BUDGET COOK</div>';
             html += '<h3 class="recipe-title">' + recipes.budget.title + '</h3>';
             html += '<p class="recipe-servings">👥 Für ' + totalPeople + ' Personen</p>';
             html += '</div>';
@@ -876,22 +1153,22 @@
             for (var i = 0; i < recipes.budget.missing.length; i++) {
                 html += '<div class="sneak-item">';
                 html += '<span>• ' + recipes.budget.missing[i].item + '</span>';
-                html += '<span class="item-price" style="color: #d97706;">~' + recipes.budget.missing[i].price.toFixed(2) + '€</span>';
+                html += '<span class="item-price" style="color: #2563eb;">~' + recipes.budget.missing[i].price.toFixed(2) + '€</span>';
                 html += '</div>';
             }
             html += '</div>';
-            html += '<button class="action-btn btn-shop" onclick="event.stopPropagation(); openSupermarket()">🛒 Bei ' + shopName + ' bestellen</button>';
+            html += '<button class="btn-shop" data-action="shop">🛒 Bei ' + shopName + ' bestellen</button>';
             html += '<div class="action-buttons">';
-            html += '<button class="action-btn btn-no" onclick="event.stopPropagation(); swipeNo()">✕ Nein</button>';
-            html += '<button class="action-btn btn-yes" onclick="event.stopPropagation(); swipeYes(\'' + recipes.budget.title + '\')">✓ Ja!</button>';
+            html += '<button class="action-btn btn-no" data-action="no">✕ Nein</button>';
+            html += '<button class="action-btn btn-yes" data-action="yes" data-recipe="' + recipes.budget.title + '">✓ Ja!</button>';
             html += '</div>';
             html += '</div>';
             
-            // PREMIUM Recipe
-            html += '<div class="recipe-card recipe-premium" onclick="selectRecipe(\'premium\')">';
+            // Craving Time (PREMIUM)
+            html += '<div class="recipe-card recipe-premium">';
             html += '<div class="recipe-header">';
             html += '<div>';
-            html += '<div class="recipe-badge badge-premium">🔴 PREMIUM</div>';
+            html += '<div class="recipe-badge badge-premium">✨ CRAVING TIME</div>';
             html += '<h3 class="recipe-title">' + recipes.premium.title + '</h3>';
             html += '<p class="recipe-servings">👥 Für ' + totalPeople + ' Personen</p>';
             html += '</div>';
@@ -903,14 +1180,14 @@
             for (var i = 0; i < recipes.premium.missing.length; i++) {
                 html += '<div class="sneak-item">';
                 html += '<span>• ' + recipes.premium.missing[i].item + '</span>';
-                html += '<span class="item-price" style="color: #9333ea;">~' + recipes.premium.missing[i].price.toFixed(2) + '€</span>';
+                html += '<span class="item-price" style="color: #d97706;">~' + recipes.premium.missing[i].price.toFixed(2) + '€</span>';
                 html += '</div>';
             }
             html += '</div>';
-            html += '<button class="action-btn btn-shop" onclick="event.stopPropagation(); openSupermarket()">🛒 Bei ' + shopName + ' bestellen</button>';
+            html += '<button class="btn-shop" data-action="shop">🛒 Bei ' + shopName + ' bestellen</button>';
             html += '<div class="action-buttons">';
-            html += '<button class="action-btn btn-no" onclick="event.stopPropagation(); swipeNo()">✕ Nein</button>';
-            html += '<button class="action-btn btn-yes" onclick="event.stopPropagation(); swipeYes(\'' + recipes.premium.title + '\')">✓ Ja!</button>';
+            html += '<button class="action-btn btn-no" data-action="no">✕ Nein</button>';
+            html += '<button class="action-btn btn-yes" data-action="yes" data-recipe="' + recipes.premium.title + '">✓ Ja!</button>';
             html += '</div>';
             html += '</div>';
             
@@ -921,10 +1198,6 @@
             currentRecipeSet = (currentRecipeSet + 1) % recipeSets.length;
             renderRecipes();
             alert('🔄 Neue Rezepte!\n\nSet ' + (currentRecipeSet + 1) + ' von ' + recipeSets.length);
-        }
-
-        function selectRecipe(tier) {
-            // Placeholder for future detailed view
         }
 
         function swipeYes(title) {
@@ -944,14 +1217,25 @@
         }
 
         function openSupermarket() {
-            var items = recipeSets[currentRecipeSet].budget.missing.map(function(m) { return m.item; }).join('\n');
-            items += '\n' + recipeSets[currentRecipeSet].premium.missing.map(function(m) { return m.item; }).join('\n');
+            var items = [];
+            var recipes = recipeSets[currentRecipeSet];
+            
+            if (recipes.budget && recipes.budget.missing) {
+                items = items.concat(recipes.budget.missing.map(function(m) { return m.item; }));
+            }
+            if (recipes.premium && recipes.premium.missing) {
+                items = items.concat(recipes.premium.missing.map(function(m) { return m.item; }));
+            }
+            
+            var itemsText = items.join('\n');
             
             var supermarketURLs = {
                 rewe: 'https://shop.rewe.de',
                 edeka: 'https://www.edeka.de',
                 lidl: 'https://www.lidl.de',
                 aldi: 'https://www.aldi-sued.de',
+                netto: 'https://www.netto-online.de',
+                penny: 'https://www.penny.de',
                 kaufland: 'https://www.kaufland.de',
                 picnic: 'https://picnic.app',
                 amazon: 'https://www.amazon.de/alm/storefront?almBrandId=QW1hem9uIEZyZXNo'
@@ -962,6 +1246,8 @@
                 edeka: 'EDEKA',
                 lidl: 'Lidl',
                 aldi: 'ALDI',
+                netto: 'Netto',
+                penny: 'Penny',
                 kaufland: 'Kaufland',
                 picnic: 'Picnic',
                 amazon: 'Amazon Fresh'
@@ -971,33 +1257,71 @@
             var marketURL = supermarketURLs[userProfile.supermarket];
             
             if (navigator.clipboard) {
-                navigator.clipboard.writeText(items).then(function() {
+                navigator.clipboard.writeText(itemsText).then(function() {
                     alert('✅ Einkaufsliste kopiert!\n\nÖffne jetzt ' + selectedMarket + '...');
                     window.open(marketURL, '_blank');
                 }).catch(function() {
-                    alert('📋 Einkaufsliste:\n\n' + items + '\n\nÖffne jetzt ' + selectedMarket + '...');
+                    alert('📋 Einkaufsliste:\n\n' + itemsText + '\n\nÖffne jetzt ' + selectedMarket + '...');
                     window.open(marketURL, '_blank');
                 });
             } else {
-                alert('📋 Einkaufsliste:\n\n' + items + '\n\nÖffne jetzt ' + selectedMarket + '...');
+                alert('📋 Einkaufsliste:\n\n' + itemsText + '\n\nÖffne jetzt ' + selectedMarket + '...');
                 window.open(marketURL, '_blank');
             }
         }
 
-        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            var target = e.target;
+            
+            if (target.classList.contains('btn-shop') || target.getAttribute('data-action') === 'shop') {
+                e.preventDefault();
+                e.stopPropagation();
+                openSupermarket();
+                return;
+            }
+            
+            if (target.classList.contains('btn-yes') || target.getAttribute('data-action') === 'yes') {
+                e.preventDefault();
+                e.stopPropagation();
+                var recipe = target.getAttribute('data-recipe') || 'Rezept';
+                swipeYes(recipe);
+                return;
+            }
+            
+            if (target.classList.contains('btn-no') || target.getAttribute('data-action') === 'no') {
+                e.preventDefault();
+                e.stopPropagation();
+                swipeNo();
+                return;
+            }
+        }, true);
+
         document.getElementById('profileModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 this.classList.remove('active');
             }
         });
 
-        // Initialize on page load
         window.addEventListener('DOMContentLoaded', function() {
+            loadProfile();
+            
             var totalPeople = userProfile.adults + userProfile.children;
             document.getElementById('totalPeople').textContent = totalPeople;
             
+            document.getElementById('budgetSlider').value = userProfile.monthlyBudget;
+            document.getElementById('budgetValue').textContent = userProfile.monthlyBudget;
+            
+            updateGreeting();
+            calculateFlowStatus();
+            
+            setInterval(updateGreeting, 60000);
+            
+            renderAllergies();
+            
             setTimeout(function() {
-                openProfileModal();
+                if (!userProfile.name) {
+                    openProfileModal();
+                }
             }, 1000);
         });
     </script>
