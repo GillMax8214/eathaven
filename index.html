@@ -26,6 +26,62 @@
             margin: 0 auto;
         }
 
+        /* Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hamburger {
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            padding: 8px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 3px;
+            background: #10b981;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .hamburger:active span {
+            background: #059669;
+        }
+
+        .container {
+            margin-top: 60px;
+        }
+
         .card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -204,12 +260,6 @@
             color: white;
         }
 
-        .btn-outline {
-            background: white;
-            color: #10b981;
-            border: 2px solid #10b981;
-        }
-
         .slider-container {
             margin: 20px 0;
         }
@@ -225,6 +275,8 @@
             font-size: 28px;
             color: #10b981;
             font-weight: 900;
+            min-width: 80px;
+            text-align: right;
         }
 
         input[type="range"] {
@@ -594,6 +646,16 @@
     </style>
 </head>
 <body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="nav-logo">EatHaven</div>
+        <button class="hamburger" onclick="openProfileModal()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
     <div class="container">
         <!-- Header -->
         <div class="card">
@@ -642,10 +704,6 @@
                     <span class="profile-item" id="supermarketBadge">📍 REWE</span>
                 </div>
             </div>
-
-            <button class="btn btn-outline" onclick="openProfileModal()">
-                👤 Profil bearbeiten
-            </button>
         </div>
 
         <!-- Demo Notice -->
@@ -782,7 +840,6 @@
     </div>
 
     <script>
-        // User Profile
         var userProfile = {
             name: '',
             adults: 2,
@@ -796,11 +853,10 @@
             daysLeft: 3
         };
 
-        // Recipe Data Sets with Flow names
         var recipeSets = [
             {
                 free: {
-                    title: 'Linsencurry Flow Match',
+                    title: 'Linsencurry FridgeMatch',
                     desc: 'Zero Waste - nutzt alle deine Vorräte optimal',
                     ingredients: ['Linsen', 'Tomaten', 'Zwiebeln', 'Curry', 'Kokosmilch', 'Reis']
                 },
@@ -827,7 +883,7 @@
             },
             {
                 free: {
-                    title: 'Pasta Flow Match',
+                    title: 'Pasta FridgeMatch',
                     desc: 'Klassisch italienisch mit deinen Vorräten',
                     ingredients: ['Nudeln', 'Tomatenmark', 'Zwiebeln', 'Knoblauch', 'Olivenöl', 'Basilikum']
                 },
@@ -853,7 +909,7 @@
             },
             {
                 free: {
-                    title: 'Reis-Bowl Flow Match',
+                    title: 'Reis-Bowl FridgeMatch',
                     desc: 'Bunt und gesund - aus deinem Vorrat',
                     ingredients: ['Reis', 'Paprika', 'Karotten', 'Zwiebeln', 'Sojasauce', 'Ingwer']
                 },
@@ -883,7 +939,6 @@
 
         var currentRecipeSet = 0;
 
-        // Flow status calculator
         function calculateFlowStatus() {
             var budget = userProfile.monthlyBudget;
             var spent = userProfile.spent;
@@ -923,10 +978,10 @@
         function generateFlowTip() {
             var tips = [
                 'Koch heute das Linsencurry. Du hast alles da und sparst dir den Einkauf für morgen!',
-                'Mit deinen Vorräten kannst du ' + userProfile.daysLeft + ' Tage überbrücken. Nutze Flow Match Rezepte!',
+                'Mit deinen Vorräten kannst du ' + userProfile.daysLeft + ' Tage überbrücken. Nutze FridgeMatch Rezepte!',
                 'Dein Budget-Flow ist optimal. Du hast noch ' + (userProfile.monthlyBudget - userProfile.spent).toFixed(0) + '€ übrig.',
                 'Zero Waste Flow: Brauch erst alle Vorräte auf, bevor du neu einkaufst!',
-                'Tipp: Flow Match Rezepte kosten dich 0€ extra und schonen dein Budget.'
+                'Tipp: FridgeMatch Rezepte kosten dich 0€ extra und schonen dein Budget.'
             ];
 
             var randomTip = tips[Math.floor(Math.random() * tips.length)];
@@ -1115,11 +1170,10 @@
             
             var html = '';
             
-            // Flow Match (FREE)
             html += '<div class="recipe-card recipe-free">';
             html += '<div class="recipe-header">';
             html += '<div>';
-            html += '<div class="recipe-badge badge-free">🌊 FLOW MATCH</div>';
+            html += '<div class="recipe-badge badge-free">🧊 FRIDGEMATCH</div>';
             html += '<h3 class="recipe-title">' + recipes.free.title + '</h3>';
             html += '<p class="recipe-servings">👥 Für ' + totalPeople + ' Personen</p>';
             html += '</div>';
@@ -1137,7 +1191,6 @@
             html += '</div>';
             html += '</div>';
             
-            // Budget Cook (BUDGET)
             html += '<div class="recipe-card recipe-budget">';
             html += '<div class="recipe-header">';
             html += '<div>';
@@ -1164,7 +1217,6 @@
             html += '</div>';
             html += '</div>';
             
-            // Craving Time (PREMIUM)
             html += '<div class="recipe-card recipe-premium">';
             html += '<div class="recipe-header">';
             html += '<div>';
