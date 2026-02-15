@@ -26,6 +26,12 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'API Key nicht konfiguriert' });
     }
 
+    // Detect image type from base64 string
+    const imageType = image.startsWith('data:image/png') ? 'image/png' : 
+                      image.startsWith('data:image/webp') ? 'image/webp' : 'image/jpeg';
+    
+    const base64Data = image.split(',')[1];
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -44,8 +50,8 @@ export default async function handler(req, res) {
                 type: 'image',
                 source: {
                   type: 'base64',
-                  media_type: image.includes('png') ? 'image/png' : 'image/jpeg',
-                  data: image.split(',')[1]
+                  media_type: imageType,
+                  data: base64Data
                 }
               },
               {
@@ -113,3 +119,10 @@ Antworte NUR mit diesem JSON Format (keine Markdown-Backticks):
     });
   }
 }
+```
+
+---
+
+**COMMIT MIT MESSAGE:**
+```
+Fix image media type detection
