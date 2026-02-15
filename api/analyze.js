@@ -1,5 +1,4 @@
 module.exports = async (req, res) => {
-  // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -17,22 +16,21 @@ module.exports = async (req, res) => {
     const { image, budget, people, diet } = req.body;
 
     if (!image) {
-      return res.status(400).json({ error: 'Kein Bild übermittelt' });
+      return res.status(400).json({ error: 'Kein Bild' });
     }
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
     
     if (!apiKey) {
-      return res.status(500).json({ error: 'API Key nicht konfiguriert' });
+      return res.status(500).json({ error: 'API Key fehlt' });
     }
 
-    // Detect image type
     const imageType = image.startsWith('data:image/png') ? 'image/png' : 
                       image.startsWith('data:image/webp') ? 'image/webp' : 'image/jpeg';
     
     const base64Data = image.split(',')[1];
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,70 +40,31 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 2048,
-        messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'image',
-                source: {
-                  type: 'base64',
-                  media_type: imageType,
-                  data: base64Data
-                }
-              },
-              {
-                type: 'text',
-                text: `Analysiere dieses Kühlschrank-Foto und erstelle 3 Rezept-Vorschläge:
-
-Budget: ${budget}€
-Personen: ${people}
-Ernährung: ${diet}
-
-Antworte NUR mit diesem JSON Format (keine Markdown-Backticks):
-{
-  "ingredients": ["Zutat1", "Zutat2"],
-  "ingredientCount": 8,
-  "daysEstimate": 2,
-  "recipes": [
-    {
-      "type": "free",
-      "title": "Rezeptname",
-      "description": "Kurze Beschreibung",
-      "ingredients": ["Zutat1", "Zutat2"],
-      "price": 0
-    },
-    {
-      "type": "budget",
-      "title": "Rezeptname",
-      "description": "Kurze Beschreibung",
-      "missing": [{"item": "Zutat", "price": 2.99}],
-      "price": 8.50
-    },
-    {
-      "type": "premium",
-      "title": "Rezeptname",
-      "description": "Kurze Beschreibung",
-      "missing": [{"item": "Zutat", "price": 5.99}],
-      "price": 18.50
-    }
-  ]
-}`
-              }
-            ]
-          }
-        ]
+        messages: [{
+          role: 'user',
+          content: [{
+            type: 'image',
+            source: {
+              type: 'base64',
+              media_type: imageType,
+              data: base64Data
+            }
+          }, {
+            type: 'text',
+            text: 'Analysiere dieses Kühlschrank-Foto und erstelle 3 Rezept-Vorschläge. Budget: ' + budget + '€, Personen: ' + people + ', Ernährung: ' + diet + '. Antworte NUR mit JSON: {"ingredients":["Zutat1"],"ingredientCount":8,"daysEstimate":2,"recipes":[{"type":"free","title":"Rezept","description":"Text","ingredients":["Z1"],"price":0},{"type":"budget","title":"Rezept","description":"Text","missing":[{"item":"Z","price":2.99}],"price":8.50},{"type":"premium","title":"Rezept","description":"Text","missing":[{"item":"Z","price":5.99}],"price":18.50}]}'
+          }]
+        }]
       })
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Claude API Error:', error);
-      return res.status(response.status).json({ error: 'Claude API Fehler' });
+    if (!apiResponse.ok) {
+      const errorText = await apiResponse.text();
+      console.error('Claude API Error:', errorText);
+      return res.status(apiResponse.status).json({ error: 'Claude API Fehler' });
     }
 
-    const data = await response.json();
-    const content = data.content[0].text;
+    const apiData = await apiResponse.json();
+    const content = apiData.content[0].text;
     
     const result = JSON.parse(content);
     
@@ -125,4 +84,4 @@ Antworte NUR mit diesem JSON Format (keine Markdown-Backticks):
 
 **COMMIT:**
 ```
-Convert to CommonJS format for Vercel
+Fix syntax error in API function
