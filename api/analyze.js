@@ -1,12 +1,12 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
+  // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'API Key nicht konfiguriert' });
     }
 
-    // Detect image type from base64 string
+    // Detect image type
     const imageType = image.startsWith('data:image/png') ? 'image/png' : 
                       image.startsWith('data:image/webp') ? 'image/webp' : 'image/jpeg';
     
@@ -70,22 +70,22 @@ Antworte NUR mit diesem JSON Format (keine Markdown-Backticks):
   "recipes": [
     {
       "type": "free",
-      "title": "Rezeptname FridgeMatch",
-      "description": "Beschreibung",
+      "title": "Rezeptname",
+      "description": "Kurze Beschreibung",
       "ingredients": ["Zutat1", "Zutat2"],
       "price": 0
     },
     {
       "type": "budget",
-      "title": "Budget Cook Rezeptname",
-      "description": "Beschreibung",
+      "title": "Rezeptname",
+      "description": "Kurze Beschreibung",
       "missing": [{"item": "Zutat", "price": 2.99}],
       "price": 8.50
     },
     {
       "type": "premium",
-      "title": "Craving Time: Rezeptname",
-      "description": "Beschreibung",
+      "title": "Rezeptname",
+      "description": "Kurze Beschreibung",
       "missing": [{"item": "Zutat", "price": 5.99}],
       "price": 18.50
     }
@@ -118,11 +118,11 @@ Antworte NUR mit diesem JSON Format (keine Markdown-Backticks):
       details: error.message 
     });
   }
-}
+};
 ```
 
 ---
 
-**COMMIT MIT MESSAGE:**
+**COMMIT:**
 ```
-Fix image media type detection
+Convert to CommonJS format for Vercel
