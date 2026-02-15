@@ -1,18 +1,14 @@
-// EatHaven - Serverless Function für Claude API
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Handle OPTIONS request
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
 
-  // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -24,14 +20,12 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Kein Bild übermittelt' });
     }
 
-    // API Key aus Vercel Environment Variable
     const apiKey = process.env.ANTHROPIC_API_KEY;
     
     if (!apiKey) {
       return res.status(500).json({ error: 'API Key nicht konfiguriert' });
     }
 
-    // Claude API aufrufen
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -50,8 +44,8 @@ export default async function handler(req, res) {
                 type: 'image',
                 source: {
                   type: 'base64',
-                  media_type: 'image/jpeg',
-                  data: image.split(',')[1] // Remove data:image/jpeg;base64, prefix
+                  media_type: image.includes('png') ? 'image/png' : 'image/jpeg',
+                  data: image.split(',')[1]
                 }
               },
               {
@@ -62,40 +56,31 @@ Budget: ${budget}€
 Personen: ${people}
 Ernährung: ${diet}
 
-Erstelle GENAU 3 Rezepte als JSON:
-1. "FridgeMatch" - Nutzt NUR die sichtbaren Zutaten (0€)
-2. "Budget Cook" - Wenige fehlende Zutaten (5-10€)
-3. "Craving Time" - Premium Version (15-25€)
-
 Antworte NUR mit diesem JSON Format (keine Markdown-Backticks):
 {
-  "ingredients": ["Zutat1", "Zutat2", "Zutat3"],
-  "ingredientCount": 12,
-  "daysEstimate": 3,
+  "ingredients": ["Zutat1", "Zutat2"],
+  "ingredientCount": 8,
+  "daysEstimate": 2,
   "recipes": [
     {
       "type": "free",
-      "title": "Rezeptname",
-      "description": "Kurze Beschreibung",
+      "title": "Rezeptname FridgeMatch",
+      "description": "Beschreibung",
       "ingredients": ["Zutat1", "Zutat2"],
       "price": 0
     },
     {
       "type": "budget",
-      "title": "Rezeptname",
-      "description": "Kurze Beschreibung",
-      "missing": [
-        {"item": "Zutat", "price": 2.99}
-      ],
+      "title": "Budget Cook Rezeptname",
+      "description": "Beschreibung",
+      "missing": [{"item": "Zutat", "price": 2.99}],
       "price": 8.50
     },
     {
       "type": "premium",
-      "title": "Rezeptname",
-      "description": "Kurze Beschreibung",
-      "missing": [
-        {"item": "Zutat", "price": 5.99}
-      ],
+      "title": "Craving Time: Rezeptname",
+      "description": "Beschreibung",
+      "missing": [{"item": "Zutat", "price": 5.99}],
       "price": 18.50
     }
   ]
@@ -116,7 +101,6 @@ Antworte NUR mit diesem JSON Format (keine Markdown-Backticks):
     const data = await response.json();
     const content = data.content[0].text;
     
-    // Parse JSON response
     const result = JSON.parse(content);
     
     return res.status(200).json(result);
