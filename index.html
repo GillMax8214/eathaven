@@ -71,7 +71,6 @@
             height: 3px;
             background: #10b981;
             border-radius: 2px;
-            transition: all 0.3s;
         }
 
         .card {
@@ -601,8 +600,8 @@
                 </div>
                 <input type="range" min="20" max="400" value="200" id="budgetSlider" oninput="updateBudget(this.value)">
                 <div class="budget-info">
-                    <span>Ausgegeben: <strong id="budgetSpent">5€</strong></span>
-                    <span>Verfügbar: <strong id="budgetAvailable">195€</strong></span>
+                    <span>Ausgegeben: <strong id="budgetSpent">0€</strong></span>
+                    <span>Verfügbar: <strong id="budgetAvailable">200€</strong></span>
                 </div>
             </div>
         </div>
@@ -727,10 +726,8 @@
             allergies: [],
             supermarket: 'rewe',
             monthlyBudget: 200,
-            spent: 5
+            spent: 0
         };
-
-        var currentRecipes = null;
 
         function loadProfile() {
             var saved = localStorage.getItem('eathaven_profile');
@@ -750,9 +747,9 @@
             if (hour >= 5 && hour < 11) {
                 return {greeting: 'Guten Morgen' + (userProfile.name ? ', ' + userProfile.name : '') + '! ☀️', cta: 'Bereit für KI-Power?'};
             } else if (hour >= 11 && hour < 14) {
-                return {greeting: 'Hey' + (userProfile.name ? ' ' + userProfile.name : '') + '! 🌤️', cta: 'Zeit für Lunch! Zeig mir deinen Kühlschrank!'};
+                return {greeting: 'Hey' + (userProfile.name ? ' ' + userProfile.name : '') + '! 🌤️', cta: 'Zeit für Lunch!'};
             } else if (hour >= 14 && hour < 18) {
-                return {greeting: 'Hi' + (userProfile.name ? ' ' + userProfile.name : '') + '! 👋', cta: 'Was kochst du heute Abend?'};
+                return {greeting: 'Hi' + (userProfile.name ? ' ' + userProfile.name : '') + '! 👋', cta: 'Was kochst du heute?'};
             } else if (hour >= 18 && hour < 23) {
                 return {greeting: 'Guten Abend' + (userProfile.name ? ', ' + userProfile.name : '') + '! 🌙', cta: 'Zeit fürs Abendessen!'};
             } else {
@@ -782,33 +779,6 @@
             document.getElementById('budgetLeft').textContent = remaining.toFixed(0) + '€';
             document.getElementById('ingredientCount').textContent = ingredientCount || '?';
             document.getElementById('daysLeft').textContent = daysEstimate || '?';
-
-            var flowEmoji = document.getElementById('flowEmoji');
-            var flowTitle = document.getElementById('flowTitle');
-            var flowSubtitle = document.getElementById('flowSubtitle');
-            var flowTip = document.getElementById('flowTipText');
-
-            if (daysEstimate >= 3 && remaining > budget * 0.5) {
-                flowEmoji.textContent = '🌊';
-                flowTitle.textContent = 'Voller Flow!';
-                flowSubtitle.textContent = 'Du bist bestens aufgestellt';
-                flowTip.textContent = 'Mit deinen Vorräten kannst du ' + daysEstimate + ' Tage überbrücken. Nutze FridgeMatch Rezepte!';
-            } else if (daysEstimate >= 2 && remaining > budget * 0.3) {
-                flowEmoji.textContent = '✨';
-                flowTitle.textContent = 'Im Flow';
-                flowSubtitle.textContent = 'Alles läuft gut';
-                flowTip.textContent = 'Du hast noch ' + daysEstimate + ' Tage Vorrat. Zeit für kreatives Kochen!';
-            } else if (daysEstimate >= 1 || remaining > budget * 0.2) {
-                flowEmoji.textContent = '⚡';
-                flowTitle.textContent = 'Flow läuft aus';
-                flowSubtitle.textContent = 'Bald einkaufen gehen';
-                flowTip.textContent = 'Plane deinen Einkauf - du hast nur noch ' + daysEstimate + ' Tag(e) Vorrat.';
-            } else {
-                flowEmoji.textContent = '🚨';
-                flowTitle.textContent = 'Flow-Stop!';
-                flowSubtitle.textContent = 'Zeit für Einkauf!';
-                flowTip.textContent = 'Dein Kühlschrank braucht Nachschub! Check die Budget Cook Rezepte.';
-            }
         }
 
         async function handlePhotoUpload(event) {
@@ -841,7 +811,6 @@
                     }
 
                     var data = await response.json();
-                    currentRecipes = data;
                     
                     calculateFlowStatus(data.ingredientCount, data.daysEstimate);
                     renderRecipes(data.recipes);
@@ -864,7 +833,6 @@
 
         function renderRecipes(recipes) {
             var container = document.getElementById('recipeContainer');
-            var totalPeople = userProfile.adults + userProfile.children;
             var html = '';
 
             recipes.forEach(function(recipe) {
@@ -972,12 +940,24 @@
         function addAllergy() {
             var select = document.getElementById('allergySelect');
             var allergy = select.value;
-            if (allergy && allergy !== 'Keine bekannt' && userProfile.allergies.indexOf(allergy) === -1) {
-                userProfile.allergies.push(allergy);
-                renderAllergies();
+            
+            if (allergy === 'Keine bekannt') {
+                if (userProfile.allergies.length > 0) {
+                    var allergyList = userProfile.allergies.join('\n• ');
+                    if (confirm('⚠️ ACHTUNG!\n\nDu hast aktuell Allergien eingetragen:\n\n• ' + allergyList + '\n\nWirklich ALLE löschen?\n\nDies kann gesundheitsgefährdend sein!')) {
+                        userProfile.allergies = [];
+                        renderAllergies();
+                    }
+                } else {
+                    userProfile.allergies = [];
+                    renderAllergies();
+                }
                 select.value = '';
-            } else if (allergy === 'Keine bekannt') {
-                userProfile.allergies = [];
+                return;
+            }
+            
+            if (allergy && userProfile.allergies.indexOf(allergy) === -1) {
+                userProfile.allergies.push(allergy);
                 renderAllergies();
                 select.value = '';
             }
