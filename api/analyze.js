@@ -1,36 +1,50 @@
-module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Credentials', true);
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    res.status(200).end();
+    return;
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
   }
 
+  const body = req.body;
+  const image = body.image;
+  const budget = body.budget;
+  const people = body.people;
+  const diet = body.diet;
+
+  if (!image) {
+    res.status(400).json({ error: 'No image' });
+    return;
+  }
+
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  
+  if (!apiKey) {
+    res.status(500).json({ error: 'No API key' });
+    return;
+  }
+
+  let imageType = 'image/jpeg';
+  if (image.indexOf('data:image/png') === 0) {
+    imageType = 'image/png';
+  } else if (image.indexOf('data:image/webp') === 0) {
+    imageType = 'image/webp';
+  }
+  
+  const parts = image.split(',');
+  const base64Data = parts[1];
+
+  const promptText = 'Analysiere dieses Kühlschrank-Foto. Budget: ' + budget + ' Euro, Personen: ' + people + ', Ernährung: ' + diet + '. Antworte mit JSON: {"ingredients":["Zutat1"],"ingredientCount":5,"daysEstimate":2,"recipes":[{"type":"free","title":"Rezept1","description":"Text","ingredients":["Z1"],"price":0},{"type":"budget","title":"Rezept2","description":"Text","missing":[{"item":"Z2","price":3}],"price":8},{"type":"premium","title":"Rezept3","description":"Text","missing":[{"item":"Z3","price":6}],"price":18}]}';
+
   try {
-    const { image, budget, people, diet } = req.body;
-
-    if (!image) {
-      return res.status(400).json({ error: 'Kein Bild' });
-    }
-
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    
-    if (!apiKey) {
-      return res.status(500).json({ error: 'API Key fehlt' });
-    }
-
-    const imageType = image.startsWith('data:image/png') ? 'image/png' : 
-                      image.startsWith('data:image/webp') ? 'image/webp' : 'image/jpeg';
-    
-    const base64Data = image.split(',')[1];
-
-    const apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,31 +65,25 @@ module.exports = async (req, res) => {
             }
           }, {
             type: 'text',
-            text: 'Analysiere dieses Kühlschrank-Foto und erstelle 3 Rezept-Vorschläge. Budget: ' + budget + '€, Personen: ' + people + ', Ernährung: ' + diet + '. Antworte NUR mit JSON: {"ingredients":["Zutat1"],"ingredientCount":8,"daysEstimate":2,"recipes":[{"type":"free","title":"Rezept","description":"Text","ingredients":["Z1"],"price":0},{"type":"budget","title":"Rezept","description":"Text","missing":[{"item":"Z","price":2.99}],"price":8.50},{"type":"premium","title":"Rezept","description":"Text","missing":[{"item":"Z","price":5.99}],"price":18.50}]}'
+            text: promptText
           }]
         }]
       })
     });
 
-    if (!apiResponse.ok) {
-      const errorText = await apiResponse.text();
-      console.error('Claude API Error:', errorText);
-      return res.status(apiResponse.status).json({ error: 'Claude API Fehler' });
+    if (!response.ok) {
+      res.status(500).json({ error: 'API error' });
+      return;
     }
 
-    const apiData = await apiResponse.json();
-    const content = apiData.content[0].text;
+    const data = await response.json();
+    const text = data.content[0].text;
+    const result = JSON.parse(text);
     
-    const result = JSON.parse(content);
-    
-    return res.status(200).json(result);
+    res.status(200).json(result);
 
   } catch (error) {
-    console.error('Server Error:', error);
-    return res.status(500).json({ 
-      error: 'Server Fehler',
-      details: error.message 
-    });
+    res.status(500).json({ error: error.message });
   }
 };
 ```
@@ -84,4 +92,4 @@ module.exports = async (req, res) => {
 
 **COMMIT:**
 ```
-Fix syntax error in API function
+Simplify API function
