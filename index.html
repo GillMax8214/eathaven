@@ -1,192 +1,82 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="EatHaven - Dein persönlicher Flow-Coach fürs Kochen">
-    <title>EatHaven - Your Safe Place to Eat</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
-    <style>
-        /* Bestehendes Design bleibt erhalten */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; padding: 20px; padding-bottom: 60px; }
-        .container { max-width: 800px; margin: 60px auto 0; }
-        .top-nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); padding: 12px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 999; display: flex; justify-content: space-between; align-items: center; }
-        .nav-logo { font-size: 24px; font-weight: 900; background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card { background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        .logo { width: 80px; height: 80px; background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%); border-radius: 20px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 40px; }
-        h1 { font-size: 32px; font-weight: 900; background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
-        
-        /* MOTTAINAI STYLES */
-        .mottainai-badge {
-            background: #1e293b;
-            color: #fbbf24;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 15px;
-            border: 1px solid #fbbf24;
-        }
-        .rank-display {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #047857;
-            font-weight: 800;
-            margin-top: 5px;
-        }
-
-        /* Buttons & Rest */
-        .btn { width: 100%; padding: 20px; border: none; border-radius: 16px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; margin: 12px 0; }
-        .btn-camera { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; display: flex; align-items: center; justify-content: center; gap: 12px; }
-        .flow-dashboard { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 2px solid #10b981; border-radius: 16px; padding: 20px; }
-        .flow-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 16px 0; }
-        .flow-stat { background: white; padding: 12px; border-radius: 12px; text-align: center; }
-        .stat-value { font-size: 24px; font-weight: 900; color: #10b981; }
-        .hidden { display: none; }
-        .spinner { border: 4px solid #e5e7eb; border-top: 4px solid #10b981; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
-</head>
-<body>
-    <div class="top-nav">
+<div class="top-nav">
         <div class="nav-logo">EatHaven</div>
-        <div class="mottainai-badge">🏯 <span id="mottainaiScoreDisplay">0</span> Pkt.</div>
-    </div>
-
-    <div class="container">
-        <div class="card">
-            <div class="header">
-                <div class="logo">🧊</div>
-                <h1>EatHaven</h1>
-                <p id="greetingText" style="text-align: center; font-weight: 700; margin-top: 10px;">Willkommen!</p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="mottainai-badge" style="background: #10b981; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 14px;">
+                🏯 <span id="mottainaiScore">0</span>
             </div>
-
-            <div class="flow-dashboard">
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <div id="rankTitle" class="rank-display">Mottainai-Lehrling</div>
-                    <div style="font-size: 40px;" id="flowEmoji">🌊</div>
-                </div>
-
-                <div class="flow-stats">
-                    <div class="flow-stat">
-                        <div class="stat-value" id="ingredientCount">0</div>
-                        <div style="font-size: 10px; font-weight: 700;">ITEMS</div>
-                    </div>
-                    <div class="flow-stat">
-                        <div class="stat-value" id="daysLeft">?</div>
-                        <div style="font-size: 10px; font-weight: 700;">TAGE</div>
-                    </div>
-                    <div class="flow-stat">
-                        <div class="stat-value" id="budgetLeft">?€</div>
-                        <div style="font-size: 10px; font-weight: 700;">BUDGET</div>
-                    </div>
-                </div>
-                
-                <div style="background: white; padding: 10px; border-radius: 10px; font-size: 13px; text-align: center;">
-                    💡 <strong>Mottainai-Tipp:</strong> <span id="flowTipText">Scanne deinen Kühlschrank für Punkte!</span>
-                </div>
-            </div>
-        </div>
-
-        <input type="file" id="photoInput" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoUpload(event)">
-        
-        <button class="btn btn-camera" onclick="document.getElementById('photoInput').click()">
-            📸 Kühlschrank scannen & punkten
-        </button>
-
-        <div id="loadingSection" class="card hidden">
-            <div class="spinner"></div>
-            <p style="text-align: center; font-weight: 700;">Claude KI analysiert... 🧠</p>
-        </div>
-
-        <div id="recipesSection" class="hidden">
-            <h2 style="text-align: center; margin: 20px 0;">🍽️ Deine KI-Rezepte</h2>
-            <div id="recipeContainer"></div>
+            <button class="hamburger" onclick="openProfileModal()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </div>
 
     <script>
-        // MOTTAINAI LOGIK DATEN
+        // Erweitere dein userProfile Objekt
         var userProfile = {
             name: '',
-            mottainaiScore: 0,
-            inventory: [],
+            adults: 2,
+            children: 0,
+            diet: 'flexitarian',
+            allergies: [],
+            supermarket: 'rewe',
             monthlyBudget: 200,
-            spent: 0
+            spent: 0,
+            mottainaiScore: 0 // Neu hinzugefügt
         };
 
-        function updateRank(score) {
-            let rank = "Mottainai-Lehrling";
-            if(score > 500) rank = "Resteverwertung-Profi";
-            if(score > 1500) rank = "Zero-Waste-Held";
-            if(score > 5000) rank = "Mottainai-Sensei 🏯";
-            
-            document.getElementById('rankTitle').innerText = rank;
-            document.getElementById('mottainaiScoreDisplay').innerText = score;
-        }
-
+        // Die neue, reparierte Upload-Funktion
         async function handlePhotoUpload(event) {
-            const file = event.target.files[0];
+            var file = event.target.files[0];
             if (!file) return;
 
             document.getElementById('loadingSection').classList.remove('hidden');
-            
-            const reader = new FileReader();
+            document.getElementById('recipesSection').classList.add('hidden');
+
+            var reader = new FileReader();
             reader.onload = async function(e) {
-                const base64Image = e.target.result.split(',')[1]; // Nur der reine Base64-String für Claude
+                // Sende nur den reinen Base64 String ohne Header
+                var base64Image = e.target.result.replace(/^data:image\/\w+;base64,/, "");
 
                 try {
-                    const response = await fetch('/api/analyze', {
+                    var response = await fetch('/api/analyze', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ image: base64Image })
+                        body: JSON.stringify({
+                            image: base64Image,
+                            budget: userProfile.monthlyBudget,
+                            people: userProfile.adults + userProfile.children,
+                            diet: userProfile.diet
+                        })
                     });
 
-                    const data = await response.json();
+                    var data = await response.json();
                     
-                    if(data.items) {
-                        // Punkte berechnen: Urgency 1-5 bringt 10-50 Punkte
-                        let pointsEarned = 0;
-                        data.items.forEach(item => {
-                            pointsEarned += (item.urgency * 10);
-                        });
-
-                        userProfile.mottainaiScore += pointsEarned;
-                        updateRank(userProfile.mottainaiScore);
+                    // MOTTAINAI LOGIK: Punkte vergeben
+                    if (data.items) {
+                        let points = data.items.reduce((acc, item) => acc + (item.urgency * 10), 0);
+                        userProfile.mottainaiScore += points;
+                        document.getElementById('mottainaiScore').textContent = userProfile.mottainaiScore;
+                        document.getElementById('ingredientCount').textContent = data.items.length;
                         
-                        document.getElementById('ingredientCount').innerText = data.items.length;
-                        localStorage.setItem('eathaven_profile', JSON.stringify(userProfile));
-                        
-                        alert(`🌟 Genial! Du hast ${data.items.length} Lebensmittel gerettet und +${pointsEarned} Mottainai-Punkte gesammelt!`);
-                        
-                        // Hier käme deine Rezept-Render-Logik
-                        if(data.recipes) renderRecipes(data.recipes);
+                        // Rang-Update
+                        let rank = "Lehrling";
+                        if(userProfile.mottainaiScore > 500) rank = "Profi";
+                        if(userProfile.mottainaiScore > 1000) rank = "Meister 🏯";
+                        document.getElementById('flowTitle').textContent = rank;
                     }
 
+                    renderRecipes(data.recipes);
                     document.getElementById('loadingSection').classList.add('hidden');
                     document.getElementById('recipesSection').classList.remove('hidden');
-                } catch (err) {
-                    alert("KI-Fehler. Prüfe deine Vercel-Logs!");
+
+                } catch (error) {
+                    console.error('Fehler:', error);
                     document.getElementById('loadingSection').classList.add('hidden');
+                    alert('KI-Fehler: Bitte prüfe die Vercel-Logs!');
                 }
             };
             reader.readAsDataURL(file);
         }
-
-        // Initialisierung beim Laden
-        window.onload = function() {
-            const saved = localStorage.getItem('eathaven_profile');
-            if(saved) {
-                userProfile = JSON.parse(saved);
-                updateRank(userProfile.mottainaiScore);
-            }
-        };
     </script>
-</body>
-</html>
-
