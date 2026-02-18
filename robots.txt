@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# EatHaven - Private Development Version
+# Diese Seite ist nicht für öffentliche Indexierung bestimmt
