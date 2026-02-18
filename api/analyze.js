@@ -1,42 +1,43 @@
-const { Anthropic } = require('@anthropic-ai/sdk');
+import { Anthropic } from '@anthropic-ai/sdk';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
   try {
-    const { image } = req.body;
+    const { image, diet, budget, people } = req.body;
 
     const response = await anthropic.messages.create({
-      model: "claude-3-sonnet-20240229",
-      max_tokens: 1024,
+      model: "claude-3-5-sonnet-20240620",
+      max_tokens: 1500,
       messages: [{
         role: "user",
         content: [
           {
             type: "image",
-            source: {
-              type: "base64",
-              media_type: "image/png",
-              data: image,
-            },
+            source: { type: "base64", media_type: "image/png", data: image },
           },
           {
             type: "text",
-            text: "Analysiere das Bild. Liste alle Lebensmittel auf. Weise jedem Element eine Dringlichkeit von 1-5 zu (5 = sofort verbrauchen). Antworte NUR mit einem JSON-Array im Format: {\"items\": [{\"name\": \"Produkt\", \"urgency\": 5}]}"
+            text: `Analysiere das Bild für einen Haushalt mit ${people} Personen (${diet}). 
+            1. Liste alle Lebensmittel mit einer Dringlichkeit (1-5) auf. 
+            2. Erstelle 3 Rezepte (Typen: 'free', 'budget', 'premium').
+            Antworte NUR mit validem JSON:
+            {
+              "items": [{"name": "Milch", "urgency": 5}],
+              "daysEstimate": 3,
+              "recipes": [{"title": "Name", "type": "free", "description": "...", "price": 0.0, "ingredients": [], "missing": []}]
+            }`
           }
         ],
       }],
     });
 
-    // Claude liefert das Ergebnis in response.content[0].text
-    const aiResponse = response.content[0].text;
-    res.status(200).json(JSON.parse(aiResponse));
+    res.status(200).json(JSON.parse(response.content[0].text));
   } catch (error) {
-    console.error("Fehler bei Claude:", error);
     res.status(500).json({ error: error.message });
   }
 }
