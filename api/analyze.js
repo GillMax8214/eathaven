@@ -22,15 +22,7 @@ export default async function handler(req, res) {
           },
           {
             type: "text",
-            text: `Analysiere das Bild für einen Haushalt mit ${people} Personen (${diet}). 
-            1. Liste alle Lebensmittel mit einer Dringlichkeit (1-5) auf. 
-            2. Erstelle 3 Rezepte (Typen: 'free', 'budget', 'premium').
-            Antworte NUR mit validem JSON:
-            {
-              "items": [{"name": "Milch", "urgency": 5}],
-              "daysEstimate": 3,
-              "recipes": [{"title": "Name", "type": "free", "description": "...", "price": 0.0, "ingredients": [], "missing": []}]
-            }`
+            text: `Analysiere das Bild für ${people} Personen (${diet}). Gib NUR JSON zurück: {"items": [{"name": "Milch", "urgency": 5}], "daysEstimate": 3, "recipes": [{"title": "Name", "type": "free", "description": "...", "price": 0.0, "ingredients": [], "missing": []}]}`
           }
         ],
       }],
