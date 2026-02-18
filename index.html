@@ -1,1 +1,1005 @@
-18bfbbc8b048e1a744bdef759dbea5b52a2ceda1
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="EatHaven - Smart kochen mit jedem Budget. Nie wieder Lebensmittel verschwenden.">
+    <title>EatHaven - Your Safe Place to Eat</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+            border-radius: 20px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .profile-badge {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            padding: 16px;
+            border-radius: 16px;
+            margin-top: 16px;
+        }
+
+        .profile-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .profile-item {
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 12px 0;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .slider-value {
+            font-size: 28px;
+            color: #10b981;
+            font-weight: 900;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 12px;
+            border-radius: 6px;
+            background: #d1fae5;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #10b981;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #10b981;
+            cursor: pointer;
+            border: none;
+        }
+
+        .recipe-card {
+            border: 3px solid;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 16px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .recipe-free {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        }
+
+        .recipe-budget {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        }
+
+        .recipe-premium {
+            border-color: #a855f7;
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        }
+
+        .recipe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .recipe-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .recipe-servings {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .recipe-price {
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 18px;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .price-free {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .price-budget {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .price-premium {
+            background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+        }
+
+        .recipe-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .badge-free {
+            background: #10b981;
+        }
+
+        .badge-budget {
+            background: #f59e0b;
+        }
+
+        .badge-premium {
+            background: #a855f7;
+        }
+
+        .recipe-description {
+            color: #475569;
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+
+        .ingredients-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .ingredient-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1f2937;
+        }
+
+        .sneak-preview {
+            background: rgba(255, 255, 255, 0.6);
+            border: 2px dashed rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+        }
+
+        .sneak-title {
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .sneak-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-size: 14px;
+        }
+
+        .sneak-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-price {
+            font-weight: 800;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-no {
+            background: white;
+            color: #ef4444;
+            border: 2px solid #ef4444;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-shop {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 600px;
+            margin: 40px auto;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+            padding: 32px;
+            color: white;
+        }
+
+        .modal-header h2 {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .modal-body {
+            padding: 24px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+
+        .diet-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .diet-btn {
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .diet-btn.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-color: #10b981;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .demo-notice {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .demo-notice strong {
+            color: #92400e;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .ingredients-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .diet-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .recipe-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card">
+            <div class="header">
+                <div class="logo">🏠</div>
+                <h1>EatHaven</h1>
+                <p class="tagline">Your Safe Place to Eat</p>
+            </div>
+
+            <div class="profile-badge">
+                <div class="profile-info">
+                    <span class="profile-item">👥 <span id="totalPeople">2</span> Personen</span>
+                    <span class="profile-item" id="dietInfo">Flexitarier</span>
+                    <span class="profile-item" id="supermarketBadge">📍 REWE</span>
+                </div>
+            </div>
+
+            <button class="btn btn-outline" onclick="openProfileModal()">
+                👤 Profil bearbeiten
+            </button>
+        </div>
+
+        <!-- Demo Notice -->
+        <div class="demo-notice">
+            <strong>ℹ️ DEMO-VERSION:</strong> Klicke "JETZT KOCHEN!" für Beispiel-Rezepte. In der finalen Version analysiert die KI deine Fotos!
+        </div>
+
+        <!-- Budget -->
+        <div class="card">
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span style="font-weight: 700;">💰 Monats-Budget</span>
+                    <span class="slider-value"><span id="budgetValue">50</span>€</span>
+                </div>
+                <input type="range" min="20" max="400" value="50" id="budgetSlider" oninput="updateBudget(this.value)">
+            </div>
+        </div>
+
+        <!-- Main Action Button -->
+        <button class="btn btn-primary" onclick="showRecipes()">
+            🍳 JETZT KOCHEN!
+        </button>
+
+        <!-- Recipes Section -->
+        <div id="recipesSection" class="hidden">
+            <h2 style="font-size: 28px; font-weight: 900; color: #1f2937; margin: 24px 0; text-align: center;">
+                🍽️ Deine Rezept-Optionen
+            </h2>
+
+            <button class="btn" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; padding: 16px;" onclick="regenerateRecipes()">
+                🔄 Neue Vorschläge
+            </button>
+
+            <div id="recipeContainer"></div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✨ Dein Profil</h2>
+                <p style="opacity: 0.9;">Rezepte passen sich automatisch an</p>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">👥 Haushaltsgröße</label>
+                    <label style="display: block; font-size: 14px; margin-bottom: 8px;">Erwachsene</label>
+                    <input type="number" id="adults" value="2" min="1" max="10">
+                    
+                    <label style="display: block; font-size: 14px; margin: 16px 0 8px 0;">Kinder</label>
+                    <input type="number" id="children" value="0" min="0" max="10">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🍽️ Ernährungsform</label>
+                    <div class="diet-buttons">
+                        <button class="diet-btn" onclick="selectDiet('omnivore')">🍖 Allesfresser</button>
+                        <button class="diet-btn active" onclick="selectDiet('flexitarian')">🥗 Flexitarier</button>
+                        <button class="diet-btn" onclick="selectDiet('vegetarian')">🥕 Vegetarisch</button>
+                        <button class="diet-btn" onclick="selectDiet('vegan')">🌱 Vegan</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">⚠️ Allergien</label>
+                    <select id="allergySelect" style="margin-bottom: 12px;">
+                        <option value="">Allergie auswählen...</option>
+                        <option value="Nüsse">Nüsse</option>
+                        <option value="Erdnüsse">Erdnüsse</option>
+                        <option value="Milch/Laktose">Milch/Laktose</option>
+                        <option value="Eier">Eier</option>
+                        <option value="Fisch">Fisch</option>
+                        <option value="Schalentiere">Schalentiere</option>
+                        <option value="Soja">Soja</option>
+                        <option value="Weizen/Gluten">Weizen/Gluten</option>
+                        <option value="Sellerie">Sellerie</option>
+                        <option value="Senf">Senf</option>
+                        <option value="Sesam">Sesam</option>
+                        <option value="Lupinen">Lupinen</option>
+                        <option value="Sulfite">Sulfite</option>
+                    </select>
+                    <button onclick="addAllergy()" style="width: 100%; padding: 12px; background: #ef4444; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-bottom: 12px;">
+                        + Allergie hinzufügen
+                    </button>
+                    <div class="tags" id="allergyTags"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🏪 Lieblings-Supermarkt</label>
+                    <div class="diet-buttons" style="grid-template-columns: repeat(3, 1fr);">
+                        <button class="diet-btn supermarket-btn active" onclick="selectSupermarket('rewe')">
+                            <div style="font-size: 12px; font-weight: 900;">REWE</div>
+                        </button>
+                        <button class="diet-btn supermarket-btn" onclick="selectSupermarket('edeka')">
+                            <div style="font-size: 12px; font-weight: 900;">EDEKA</div>
+                        </button>
+                        <button class="diet-btn supermarket-btn" onclick="selectSupermarket('lidl')">
+                            <div style="font-size: 12px; font-weight: 900;">Lidl</div>
+                        </button>
+                        <button class="diet-btn supermarket-btn" onclick="selectSupermarket('aldi')">
+                            <div style="font-size: 12px; font-weight: 900;">ALDI</div>
+                        </button>
+                        <button class="diet-btn supermarket-btn" onclick="selectSupermarket('kaufland')">
+                            <div style="font-size: 12px; font-weight: 900;">Kaufland</div>
+                        </button>
+                        <button class="diet-btn supermarket-btn" onclick="selectSupermarket('picnic')">
+                            <div style="font-size: 12px; font-weight: 900;">Picnic</div>
+                        </button>
+                        <button class="diet-btn supermarket-btn" onclick="selectSupermarket('amazon')">
+                            <div style="font-size: 11px; font-weight: 900;">Amazon Fresh</div>
+                        </button>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="saveProfile()">
+                    ✓ Profil speichern
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User Profile
+        var userProfile = {
+            adults: 2,
+            children: 0,
+            diet: 'flexitarian',
+            allergies: [],
+            supermarket: 'rewe'
+        };
+
+        // Recipe Data Sets
+        var recipeSets = [
+            {
+                free: {
+                    title: 'Nudeln mit Tomatensoße',
+                    desc: 'Klassisch italienisch mit deinen Vorräten',
+                    ingredients: ['Nudeln', 'Tomatenmark', 'Zwiebeln', 'Knoblauch', 'Olivenöl', 'Basilikum']
+                },
+                budget: {
+                    title: 'Spaghetti Bolognese',
+                    desc: 'Mit frischem Hackfleisch - ein Familien-Klassiker',
+                    price: 8.50,
+                    missing: [
+                        {item: 'Hackfleisch 500g', price: 4.99},
+                        {item: 'Parmesan 100g', price: 3.49}
+                    ]
+                },
+                premium: {
+                    title: 'Premium Pasta Carbonara ✨',
+                    desc: 'Mit Guanciale und Pecorino - Restaurant-Qualität',
+                    price: 15.00,
+                    missing: [
+                        {item: 'Guanciale 200g', price: 7.99},
+                        {item: 'Pecorino Romano 100g', price: 5.49},
+                        {item: 'Bio-Eier (6 Stück)', price: 2.99}
+                    ]
+                }
+            },
+            {
+                free: {
+                    title: 'Reis mit Gemüse',
+                    desc: 'Bunt und gesund - aus deinem Vorrat',
+                    ingredients: ['Reis', 'Paprika', 'Karotten', 'Zwiebeln', 'Sojasauce', 'Ingwer']
+                },
+                budget: {
+                    title: 'Chicken Curry',
+                    desc: 'Aromatisch und würzig mit zartem Hühnchen',
+                    price: 9.99,
+                    missing: [
+                        {item: 'Hähnchenbrust 400g', price: 5.99},
+                        {item: 'Kokosmilch', price: 1.99},
+                        {item: 'Curry Paste', price: 2.49}
+                    ]
+                },
+                premium: {
+                    title: 'Thai Red Curry Deluxe 🌶️',
+                    desc: 'Mit Garnelen und frischem Basilikum',
+                    price: 18.50,
+                    missing: [
+                        {item: 'Garnelen 300g', price: 9.99},
+                        {item: 'Thai-Basilikum Bund', price: 2.99},
+                        {item: 'Zitronengras', price: 1.99},
+                        {item: 'Fischsauce', price: 3.49}
+                    ]
+                }
+            },
+            {
+                free: {
+                    title: 'Kartoffelsuppe',
+                    desc: 'Cremig und sättigend - perfekt für kalte Tage',
+                    ingredients: ['Kartoffeln', 'Zwiebeln', 'Gemüsebrühe', 'Sahne', 'Petersilie', 'Muskatnuss']
+                },
+                budget: {
+                    title: 'Kartoffel-Hack-Pfanne',
+                    desc: 'Deftig und lecker - die ganze Familie liebt es',
+                    price: 7.50,
+                    missing: [
+                        {item: 'Hackfleisch 400g', price: 3.99},
+                        {item: 'Schmand 200g', price: 1.49},
+                        {item: 'Speck 100g', price: 2.49}
+                    ]
+                },
+                premium: {
+                    title: 'Kartoffel-Trüffel-Gratin 🍄',
+                    desc: 'Mit echtem Trüffel - ein Gaumenschmaus',
+                    price: 22.00,
+                    missing: [
+                        {item: 'Trüffelöl 100ml', price: 12.99},
+                        {item: 'Gruyère Käse 200g', price: 5.99},
+                        {item: 'Crème fraîche 200g', price: 2.49}
+                    ]
+                }
+            }
+        ];
+
+        var currentRecipeSet = 0;
+
+        // Functions
+        function updateBudget(value) {
+            document.getElementById('budgetValue').textContent = value;
+        }
+
+        function openProfileModal() {
+            document.getElementById('profileModal').classList.add('active');
+            document.getElementById('adults').value = userProfile.adults;
+            document.getElementById('children').value = userProfile.children;
+        }
+
+        function selectDiet(diet) {
+            var buttons = document.querySelectorAll('.diet-btn:not(.supermarket-btn)');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            event.target.classList.add('active');
+            userProfile.diet = diet;
+        }
+
+        function selectSupermarket(market) {
+            var buttons = document.querySelectorAll('.supermarket-btn');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            event.target.classList.add('active');
+            userProfile.supermarket = market;
+        }
+
+        function addAllergy() {
+            var select = document.getElementById('allergySelect');
+            var allergy = select.value;
+            if (allergy && userProfile.allergies.indexOf(allergy) === -1) {
+                userProfile.allergies.push(allergy);
+                renderAllergies();
+                select.value = '';
+            }
+        }
+
+        function removeAllergy(allergy) {
+            userProfile.allergies = userProfile.allergies.filter(function(a) { return a !== allergy; });
+            renderAllergies();
+        }
+
+        function renderAllergies() {
+            var container = document.getElementById('allergyTags');
+            var html = '';
+            for (var i = 0; i < userProfile.allergies.length; i++) {
+                html += '<div class="tag">' + userProfile.allergies[i] + 
+                       '<button onclick="removeAllergy(\'' + userProfile.allergies[i] + '\')">✕</button></div>';
+            }
+            container.innerHTML = html;
+        }
+
+        function saveProfile() {
+            userProfile.adults = parseInt(document.getElementById('adults').value) || 2;
+            userProfile.children = parseInt(document.getElementById('children').value) || 0;
+            
+            var totalPeople = userProfile.adults + userProfile.children;
+            document.getElementById('totalPeople').textContent = totalPeople;
+            
+            var dietLabels = {
+                omnivore: 'Allesfresser',
+                flexitarian: 'Flexitarier',
+                vegetarian: 'Vegetarisch',
+                vegan: 'Vegan'
+            };
+            document.getElementById('dietInfo').textContent = dietLabels[userProfile.diet];
+            
+            var supermarketLabels = {
+                rewe: 'REWE',
+                edeka: 'EDEKA',
+                lidl: 'Lidl',
+                aldi: 'ALDI',
+                kaufland: 'Kaufland',
+                picnic: 'Picnic',
+                amazon: 'Amazon Fresh'
+            };
+            document.getElementById('supermarketBadge').textContent = '📍 ' + supermarketLabels[userProfile.supermarket];
+            
+            if (!document.getElementById('recipesSection').classList.contains('hidden')) {
+                renderRecipes();
+            }
+            
+            document.getElementById('profileModal').classList.remove('active');
+            alert('✅ Profil gespeichert!\n\n👥 ' + totalPeople + ' Personen\n🍽️ ' + dietLabels[userProfile.diet] + '\n📍 ' + supermarketLabels[userProfile.supermarket]);
+        }
+
+        function renderRecipes() {
+            var totalPeople = userProfile.adults + userProfile.children;
+            var recipes = recipeSets[currentRecipeSet];
+            var container = document.getElementById('recipeContainer');
+            
+            var supermarketLabels = {
+                rewe: 'REWE',
+                edeka: 'EDEKA',
+                lidl: 'Lidl',
+                aldi: 'ALDI',
+                kaufland: 'Kaufland',
+                picnic: 'Picnic',
+                amazon: 'Amazon Fresh'
+            };
+            var shopName = supermarketLabels[userProfile.supermarket];
+            
+            var html = '';
+            
+            // FREE Recipe
+            html += '<div class="recipe-card recipe-free" onclick="selectRecipe(\'free\')">';
+            html += '<div class="recipe-header">';
+            html += '<div>';
+            html += '<div class="recipe-badge badge-free">🟢 GRATIS</div>';
+            html += '<h3 class="recipe-title">' + recipes.free.title + '</h3>';
+            html += '<p class="recipe-servings">👥 Für ' + totalPeople + ' Personen</p>';
+            html += '</div>';
+            html += '<div class="recipe-price price-free">0€</div>';
+            html += '</div>';
+            html += '<p class="recipe-description">' + recipes.free.desc + '</p>';
+            html += '<div class="ingredients-list">';
+            for (var i = 0; i < recipes.free.ingredients.length; i++) {
+                html += '<div class="ingredient-item">✓ ' + recipes.free.ingredients[i] + '</div>';
+            }
+            html += '</div>';
+            html += '<div class="action-buttons">';
+            html += '<button class="action-btn btn-no" onclick="event.stopPropagation(); swipeNo()">✕ Nein</button>';
+            html += '<button class="action-btn btn-yes" onclick="event.stopPropagation(); swipeYes(\'' + recipes.free.title + '\')">✓ Ja!</button>';
+            html += '</div>';
+            html += '</div>';
+            
+            // BUDGET Recipe
+            html += '<div class="recipe-card recipe-budget" onclick="selectRecipe(\'budget\')">';
+            html += '<div class="recipe-header">';
+            html += '<div>';
+            html += '<div class="recipe-badge badge-budget">🟡 UPGRADE</div>';
+            html += '<h3 class="recipe-title">' + recipes.budget.title + '</h3>';
+            html += '<p class="recipe-servings">👥 Für ' + totalPeople + ' Personen</p>';
+            html += '</div>';
+            html += '<div class="recipe-price price-budget">' + recipes.budget.price.toFixed(2) + '€</div>';
+            html += '</div>';
+            html += '<p class="recipe-description">' + recipes.budget.desc + '</p>';
+            html += '<div class="sneak-preview">';
+            html += '<div class="sneak-title">👁️ Sneak Preview - Fehlende Zutaten:</div>';
+            for (var i = 0; i < recipes.budget.missing.length; i++) {
+                html += '<div class="sneak-item">';
+                html += '<span>• ' + recipes.budget.missing[i].item + '</span>';
+                html += '<span class="item-price" style="color: #d97706;">~' + recipes.budget.missing[i].price.toFixed(2) + '€</span>';
+                html += '</div>';
+            }
+            html += '</div>';
+            html += '<button class="action-btn btn-shop" onclick="event.stopPropagation(); openSupermarket()">🛒 Bei ' + shopName + ' bestellen</button>';
+            html += '<div class="action-buttons">';
+            html += '<button class="action-btn btn-no" onclick="event.stopPropagation(); swipeNo()">✕ Nein</button>';
+            html += '<button class="action-btn btn-yes" onclick="event.stopPropagation(); swipeYes(\'' + recipes.budget.title + '\')">✓ Ja!</button>';
+            html += '</div>';
+            html += '</div>';
+            
+            // PREMIUM Recipe
+            html += '<div class="recipe-card recipe-premium" onclick="selectRecipe(\'premium\')">';
+            html += '<div class="recipe-header">';
+            html += '<div>';
+            html += '<div class="recipe-badge badge-premium">🔴 PREMIUM</div>';
+            html += '<h3 class="recipe-title">' + recipes.premium.title + '</h3>';
+            html += '<p class="recipe-servings">👥 Für ' + totalPeople + ' Personen</p>';
+            html += '</div>';
+            html += '<div class="recipe-price price-premium">' + recipes.premium.price.toFixed(2) + '€</div>';
+            html += '</div>';
+            html += '<p class="recipe-description">' + recipes.premium.desc + '</p>';
+            html += '<div class="sneak-preview">';
+            html += '<div class="sneak-title">👁️ Sneak Preview - Premium Zutaten:</div>';
+            for (var i = 0; i < recipes.premium.missing.length; i++) {
+                html += '<div class="sneak-item">';
+                html += '<span>• ' + recipes.premium.missing[i].item + '</span>';
+                html += '<span class="item-price" style="color: #9333ea;">~' + recipes.premium.missing[i].price.toFixed(2) + '€</span>';
+                html += '</div>';
+            }
+            html += '</div>';
+            html += '<button class="action-btn btn-shop" onclick="event.stopPropagation(); openSupermarket()">🛒 Bei ' + shopName + ' bestellen</button>';
+            html += '<div class="action-buttons">';
+            html += '<button class="action-btn btn-no" onclick="event.stopPropagation(); swipeNo()">✕ Nein</button>';
+            html += '<button class="action-btn btn-yes" onclick="event.stopPropagation(); swipeYes(\'' + recipes.premium.title + '\')">✓ Ja!</button>';
+            html += '</div>';
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+
+        function regenerateRecipes() {
+            currentRecipeSet = (currentRecipeSet + 1) % recipeSets.length;
+            renderRecipes();
+            alert('🔄 Neue Rezepte!\n\nSet ' + (currentRecipeSet + 1) + ' von ' + recipeSets.length);
+        }
+
+        function selectRecipe(tier) {
+            // Placeholder for future detailed view
+        }
+
+        function swipeYes(title) {
+            alert('✅ SUPER!\n\n"' + title + '" gespeichert!\n\n📝 In der echten App:\n• Rezept in deiner Sammlung\n• Zutaten auf Einkaufsliste\n• Kochanleitung verfügbar');
+        }
+
+        function swipeNo() {
+            alert('👍 Kein Problem!\n\nProbiere "🔄 Neue Vorschläge" aus!');
+        }
+
+        function showRecipes() {
+            renderRecipes();
+            document.getElementById('recipesSection').classList.remove('hidden');
+            setTimeout(function() {
+                document.getElementById('recipesSection').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        function openSupermarket() {
+            var items = recipeSets[currentRecipeSet].budget.missing.map(function(m) { return m.item; }).join('\n');
+            items += '\n' + recipeSets[currentRecipeSet].premium.missing.map(function(m) { return m.item; }).join('\n');
+            
+            var supermarketURLs = {
+                rewe: 'https://shop.rewe.de',
+                edeka: 'https://www.edeka.de',
+                lidl: 'https://www.lidl.de',
+                aldi: 'https://www.aldi-sued.de',
+                kaufland: 'https://www.kaufland.de',
+                picnic: 'https://picnic.app',
+                amazon: 'https://www.amazon.de/alm/storefront?almBrandId=QW1hem9uIEZyZXNo'
+            };
+            
+            var supermarketLabels = {
+                rewe: 'REWE',
+                edeka: 'EDEKA',
+                lidl: 'Lidl',
+                aldi: 'ALDI',
+                kaufland: 'Kaufland',
+                picnic: 'Picnic',
+                amazon: 'Amazon Fresh'
+            };
+            
+            var selectedMarket = supermarketLabels[userProfile.supermarket];
+            var marketURL = supermarketURLs[userProfile.supermarket];
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(items).then(function() {
+                    alert('✅ Einkaufsliste kopiert!\n\nÖffne jetzt ' + selectedMarket + '...');
+                    window.open(marketURL, '_blank');
+                }).catch(function() {
+                    alert('📋 Einkaufsliste:\n\n' + items + '\n\nÖffne jetzt ' + selectedMarket + '...');
+                    window.open(marketURL, '_blank');
+                });
+            } else {
+                alert('📋 Einkaufsliste:\n\n' + items + '\n\nÖffne jetzt ' + selectedMarket + '...');
+                window.open(marketURL, '_blank');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('profileModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            var totalPeople = userProfile.adults + userProfile.children;
+            document.getElementById('totalPeople').textContent = totalPeople;
+            
+            setTimeout(function() {
+                openProfileModal();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
