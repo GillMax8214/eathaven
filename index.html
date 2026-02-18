@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="EatHaven - Dein persönlicher Flow-Coach fürs Kochen">
-    <title>EatHaven - Your Safe Place to Eat</title>
+    <meta name="description" content="EatHaven - Dein Mottainai Flow-Coach">
+    <title>EatHaven - Mottainai Flow</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
     <style>
         * {
@@ -121,6 +121,77 @@
             font-size: 14px;
         }
 
+        /* MOTTAINAI BADGE */
+        .mottainai-badge {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 3px solid #f59e0b;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 16px 0;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .badge-icon {
+            font-size: 64px;
+            line-height: 1;
+        }
+
+        .badge-info {
+            flex: 1;
+        }
+
+        .rank-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: #92400e;
+            margin-bottom: 4px;
+        }
+
+        .points {
+            font-size: 16px;
+            font-weight: 700;
+            color: #b45309;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.5);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .progress {
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+            height: 100%;
+            transition: width 0.5s;
+        }
+
+        .next-level {
+            font-size: 12px;
+            color: #92400e;
+            font-weight: 600;
+        }
+
+        /* THIS WEEK STATS */
+        .this-week-stats {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 2px solid #10b981;
+            border-radius: 16px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .this-week-stats div {
+            font-size: 14px;
+            font-weight: 600;
+            color: #047857;
+            margin: 6px 0;
+        }
+
         .flow-dashboard {
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
             border: 2px solid #10b981;
@@ -200,6 +271,50 @@
             line-height: 1.5;
         }
 
+        /* CELEBRATION POPUP */
+        .celebration-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            z-index: 9999;
+            text-align: center;
+            max-width: 90%;
+            transition: transform 0.3s;
+        }
+
+        .celebration-popup.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .celebration-emoji {
+            font-size: 80px;
+            margin-bottom: 16px;
+            animation: bounce 0.6s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .celebration-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: #10b981;
+            margin-bottom: 12px;
+        }
+
+        .celebration-text {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
         .btn {
             width: 100%;
             padding: 20px;
@@ -229,6 +344,17 @@
         .btn-secondary {
             background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
             color: white;
+        }
+
+        .btn-close {
+            background: #e5e7eb;
+            color: #1f2937;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
         }
 
         .slider-container {
@@ -533,6 +659,7 @@
             .diet-buttons { grid-template-columns: 1fr; }
             .recipe-header { flex-direction: column; gap: 12px; }
             .flow-stats { grid-template-columns: 1fr; }
+            .mottainai-badge { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
@@ -553,6 +680,26 @@
                 <h1>EatHaven</h1>
                 <p class="greeting" id="greetingText">Willkommen!</p>
                 <p class="tagline" id="greetingCta">Your Safe Place to Eat</p>
+            </div>
+
+            <!-- MOTTAINAI BADGE -->
+            <div class="mottainai-badge">
+                <div class="badge-icon" id="mottainaiIcon">🌱</div>
+                <div class="badge-info">
+                    <div class="rank-title" id="rankTitle">Mottainai-Entdecker</div>
+                    <div class="points"><span id="totalPoints">0</span> Punkte</div>
+                    <div class="progress-bar">
+                        <div class="progress" id="rankProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="next-level" id="nextLevelText">Nächster Rang in 100 Punkten</div>
+                </div>
+            </div>
+
+            <!-- THIS WEEK STATS -->
+            <div class="this-week-stats">
+                <div>🌟 Diese Woche: <strong id="weekRecipes">0</strong> FridgeMatch Rezepte</div>
+                <div>♻️ <strong id="weekSaved">0 kg</strong> Lebensmittel gerettet</div>
+                <div>🔥 <strong id="currentStreak">0</strong> Tage Streak</div>
             </div>
 
             <div class="flow-dashboard">
@@ -620,6 +767,14 @@
             </h2>
             <div id="recipeContainer"></div>
         </div>
+    </div>
+
+    <!-- CELEBRATION POPUP -->
+    <div id="celebrationPopup" class="celebration-popup">
+        <div class="celebration-emoji" id="celebrationEmoji">🎉</div>
+        <div class="celebration-title" id="celebrationTitle">+50 Punkte!</div>
+        <div class="celebration-text" id="celebrationText">FridgeMatch Rezept gekocht!</div>
+        <button class="btn-close" onclick="closeCelebration()">Weiter</button>
     </div>
 
     <div id="profileModal" class="modal">
@@ -723,6 +878,26 @@
             spent: 0
         };
 
+        var mottainaiProfile = {
+            points: 0,
+            rank: 'Mottainai-Entdecker',
+            rankIcon: '🌱',
+            weekRecipes: 0,
+            weekSaved: 0,
+            currentStreak: 0,
+            lastActivity: null,
+            totalRecipes: 0,
+            achievements: []
+        };
+
+        var rankThresholds = [
+            { name: 'Mottainai-Entdecker', icon: '🌱', points: 0 },
+            { name: 'Reste-Retter', icon: '🥉', points: 100 },
+            { name: 'Flow-Meister', icon: '🥈', points: 500 },
+            { name: 'Kinpira-König', icon: '🥇', points: 1500 },
+            { name: 'Mottainai-Sensei', icon: '💎', points: 3000 }
+        ];
+
         function loadProfile() {
             var saved = localStorage.getItem('eathaven_profile');
             if (saved) {
@@ -730,16 +905,106 @@
                     userProfile = Object.assign(userProfile, JSON.parse(saved));
                 } catch (e) {}
             }
+            
+            var savedMottainai = localStorage.getItem('eathaven_mottainai');
+            if (savedMottainai) {
+                try {
+                    mottainaiProfile = Object.assign(mottainaiProfile, JSON.parse(savedMottainai));
+                } catch (e) {}
+            }
         }
 
         function saveProfileToStorage() {
             localStorage.setItem('eathaven_profile', JSON.stringify(userProfile));
+            localStorage.setItem('eathaven_mottainai', JSON.stringify(mottainaiProfile));
+        }
+
+        function addMottainaiPoints(action, amount) {
+            var points = {
+                'fridgematch': 50,
+                'beforeMHD': 100,
+                'weekNoWaste': 200,
+                'monthNoWaste': 500,
+                'sharedRecipe': 150,
+                'streak5': 75
+            };
+            
+            var pointsToAdd = amount || points[action] || 0;
+            mottainaiProfile.points += pointsToAdd;
+            
+            updateRank();
+            updateMottainaiDisplay();
+            saveProfileToStorage();
+            
+            showCelebration(action, pointsToAdd);
+        }
+
+        function updateRank() {
+            var currentRank = rankThresholds[0];
+            for (var i = 0; i < rankThresholds.length; i++) {
+                if (mottainaiProfile.points >= rankThresholds[i].points) {
+                    currentRank = rankThresholds[i];
+                }
+            }
+            
+            mottainaiProfile.rank = currentRank.name;
+            mottainaiProfile.rankIcon = currentRank.icon;
+        }
+
+        function updateMottainaiDisplay() {
+            document.getElementById('mottainaiIcon').textContent = mottainaiProfile.rankIcon;
+            document.getElementById('rankTitle').textContent = mottainaiProfile.rank;
+            document.getElementById('totalPoints').textContent = mottainaiProfile.points;
+            
+            var currentRankIndex = 0;
+            for (var i = 0; i < rankThresholds.length; i++) {
+                if (mottainaiProfile.points >= rankThresholds[i].points) {
+                    currentRankIndex = i;
+                }
+            }
+            
+            if (currentRankIndex < rankThresholds.length - 1) {
+                var nextRank = rankThresholds[currentRankIndex + 1];
+                var pointsNeeded = nextRank.points - mottainaiProfile.points;
+                var progress = ((mottainaiProfile.points - rankThresholds[currentRankIndex].points) / (nextRank.points - rankThresholds[currentRankIndex].points)) * 100;
+                
+                document.getElementById('rankProgress').style.width = progress + '%';
+                document.getElementById('nextLevelText').textContent = 'Nächster Rang in ' + pointsNeeded + ' Punkten';
+            } else {
+                document.getElementById('rankProgress').style.width = '100%';
+                document.getElementById('nextLevelText').textContent = '🎉 Max Level erreicht!';
+            }
+            
+            document.getElementById('weekRecipes').textContent = mottainaiProfile.weekRecipes;
+            document.getElementById('weekSaved').textContent = mottainaiProfile.weekSaved.toFixed(1);
+            document.getElementById('currentStreak').textContent = mottainaiProfile.currentStreak;
+        }
+
+        function showCelebration(action, points) {
+            var messages = {
+                'fridgematch': { emoji: '🧊', title: '+' + points + ' Punkte!', text: 'FridgeMatch Rezept gekocht!' },
+                'beforeMHD': { emoji: '⏰', title: '+' + points + ' Punkte!', text: 'Lebensmittel vor MHD gerettet!' },
+                'weekNoWaste': { emoji: '♻️', title: '+' + points + ' Punkte!', text: 'Eine Woche ohne Verschwendung!' },
+                'monthNoWaste': { emoji: '🏆', title: '+' + points + ' Punkte!', text: 'Ein Monat Zero Waste!' },
+                'streak5': { emoji: '🔥', title: '+' + points + ' Punkte!', text: '5 Tage Streak!' }
+            };
+            
+            var message = messages[action] || { emoji: '🎉', title: '+' + points + ' Punkte!', text: 'Gut gemacht!' };
+            
+            document.getElementById('celebrationEmoji').textContent = message.emoji;
+            document.getElementById('celebrationTitle').textContent = message.title;
+            document.getElementById('celebrationText').textContent = message.text;
+            document.getElementById('celebrationPopup').classList.add('active');
+        }
+
+        function closeCelebration() {
+            document.getElementById('celebrationPopup').classList.remove('active');
         }
 
         function getTimeBasedGreeting() {
             var hour = new Date().getHours();
             if (hour >= 5 && hour < 11) {
-                return {greeting: 'Guten Morgen' + (userProfile.name ? ', ' + userProfile.name : '') + '! ☀️', cta: 'Bereit für KI-Power?'};
+                return {greeting: 'Guten Morgen' + (userProfile.name ? ', ' + userProfile.name : '') + '! ☀️', cta: 'Bereit für Mottainai?'};
             } else if (hour >= 11 && hour < 14) {
                 return {greeting: 'Hey' + (userProfile.name ? ' ' + userProfile.name : '') + '! 🌤️', cta: 'Zeit für Lunch!'};
             } else if (hour >= 14 && hour < 18) {
@@ -782,18 +1047,15 @@
             document.getElementById('loadingSection').classList.remove('hidden');
             document.getElementById('recipesSection').classList.add('hidden');
 
-            // Bild komprimieren BEVOR es zur API geht!
             var reader = new FileReader();
             reader.onload = function(e) {
                 var img = new Image();
                 img.onload = function() {
-                    // Max Breite: 1920px (genug für KI, klein genug für API)
                     var maxWidth = 1920;
                     var maxHeight = 1920;
                     var width = img.width;
                     var height = img.height;
 
-                    // Berechne neue Größe (behält Seitenverhältnis)
                     if (width > height) {
                         if (width > maxWidth) {
                             height = height * (maxWidth / width);
@@ -806,17 +1068,13 @@
                         }
                     }
 
-                    // Canvas erstellen und Bild verkleinern
                     var canvas = document.createElement('canvas');
                     canvas.width = width;
                     canvas.height = height;
                     var ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    // Als JPEG mit 85% Qualität (gute Balance)
                     var compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
-
-                    // Jetzt zur API senden
                     sendToAPI(compressedBase64);
                 };
                 img.src = e.target.result;
@@ -904,10 +1162,30 @@
                     html += '</div>';
                 }
 
+                if (recipe.type === 'free') {
+                    html += '<button onclick="cookRecipe(\'' + recipe.title + '\')" style="width: 100%; padding: 12px; background: #10b981; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 12px;">';
+                    html += '✓ Gekocht! (+50 Punkte)';
+                    html += '</button>';
+                }
+
                 html += '</div>';
             });
 
             container.innerHTML = html;
+        }
+
+        function cookRecipe(recipeName) {
+            mottainaiProfile.weekRecipes++;
+            mottainaiProfile.totalRecipes++;
+            mottainaiProfile.weekSaved += 0.5;
+            mottainaiProfile.currentStreak++;
+            mottainaiProfile.lastActivity = new Date().toISOString();
+            
+            addMottainaiPoints('fridgematch', 50);
+            
+            if (mottainaiProfile.currentStreak === 5) {
+                addMottainaiPoints('streak5', 75);
+            }
         }
 
         function openProfileModal() {
@@ -1039,6 +1317,7 @@
             document.getElementById('budgetSpent').textContent = userProfile.spent.toFixed(0) + '€';
             document.getElementById('budgetAvailable').textContent = (userProfile.monthlyBudget - userProfile.spent).toFixed(0) + '€';
             updateGreeting();
+            updateMottainaiDisplay();
             setInterval(updateGreeting, 60000);
             renderAllergies();
             setTimeout(function() { if (!userProfile.name) openProfileModal(); }, 1000);
